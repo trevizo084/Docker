@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>productos</title>
+    <link rel="stylesheet" href="Style.css" />
+    <!-- Iconos -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- <style>
+        /* Estilos para los productos */
+         .cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: flex-start;
+    }
+
+    .card {
+        flex: 0 1 300px;
+        box-sizing: border-box;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        border-radius: 0.5rem;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .card img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .search-bar {
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .search-bar input {
+        width: 50%;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 0.5rem;
+    }
+
+    .main-content {
+    flex: 1; /* ocupa todo el espacio restante junto al sidebar */
+    display: flex;
+    flex-direction: column; /* elementos dentro de main-content se apilan verticalmente */
+    padding: 1rem;
+    }
+    </style> -->
+
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.jpeg" alt="Stationary Logo"> 
+                    <span><h1>Stationary</h1></span>
+                </div>
+                <div class="toggle">
+                    <i class='bx bx-x'></i>
+                </div>
+            </div>
+            <%- include('rutas')%>
+        </aside>
+
+        <div class="main-content">
+            <div class="search-container">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Buscar productos..." id="searchInput" onkeyup="filterProducts()">
+                </div>
+            </div>
+
+            <div class="cards" id="productCards">
+                <% products.forEach(product => { %>
+                    <div class="card">
+                        <div class="card-img">
+                            <img src="<%= product.imegen_producto ? product.imegen_producto : '/img/default-product.jpg' %>" alt="<%= product.nombre %>">
+                            <div class="stock-badge <%= product.stock === 0 ? 'sin-stock-badge' : (product.stock <= 5 ? 'poco-stock-badge' : 'suficiente-stock-badge') %>">
+                                <%= product.stock === 0 ? 'Agotado' : (product.stock <= 5 ? 'Últimas' : 'Disponible') %>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3><%= product.nombre %></h3>
+                            <p><%= product.descripcion %></p>
+                            <div class="price"><%= product.precio %>$</div>
+                            
+                            <div class="stock-info">
+                                <i class="fas fa-box"></i>
+                                <span class="<%= product.stock === 0 ? 'sin-stock' : (product.stock <= 5 ? 'poco-stock' : 'suficiente-stock') %>">
+                                    <%= product.stock %> unidades
+                                    <% if (product.stock === 0) { %>
+                                        (Agotado)
+                                    <% } else if (product.stock <= 5) { %>
+                                        (Últimas unidades)
+                                    <% } %>
+                                </span>
+                            </div>
+
+                            <% if (product.stock > 0) { %>
+                            <form action="/carrito/agregar" method="POST">
+                                <input type="hidden" name="id_producto" value="<%= product.id_producto %>">
+                                <div class="quantity-input">
+                                    <label for="cantidad">Cant:</label>
+                                    <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="<%= product.stock %>">
+                                </div>
+                                <button type="submit" class="add-to-cart-btn">
+                                    <i class="fas fa-shopping-cart"></i> Agregar al carrito
+                                </button>
+                            </form>
+                            <% } else { %>
+                            <button class="disabled-btn" disabled>
+                                <i class="fas fa-times-circle"></i> Sin stock
+                            </button>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterProducts() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.getElementById('productCards').getElementsByClassName('card');
+
+            for (let card of cards) {
+                const title = card.getElementsByTagName('h3')[0].innerText.toLowerCase();
+                if (title.includes(input)) {
+                    card.style.display = '';
+                    card.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+        }
+
+        // Toggle sidebar functionality
+        document.querySelector('.toggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('open');
+            
+            // Change icon based on state
+            const icon = this.querySelector('i');
+            if (document.querySelector('.sidebar').classList.contains('open')) {
+                icon.classList.remove('bx-x');
+                icon.classList.add('bx-menu');
+            } else {
+                icon.classList.remove('bx-menu');
+                icon.classList.add('bx-x');
+            }
+        });
+    </script>
+
+    <script src="js/nav.js"></script>
+</body>
+</html>

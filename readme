@@ -1,0 +1,50 @@
+#Descripción del proyecto
+
+En el presente proyecto se realizó un carrito de compras construido en node js y express
+con la finalidad de poner en práctica todo lo aprendido durante las unidades. El carrito 
+se manejó con una base de datos en Mysql, endpoints para manejar las rutas necesarias 
+para las funcionalidades del carrito tales como eliminar, agregar, finalizar compra, etc.
+También se implementó el uso de herramientas de autenticación como JWT y OAuth2.0 con la
+finalidad de implementar diferentes tipos de seguridad en el carrito.
+Además también se hizo uso de Docker-compose que permitió crear un contenedor del proyecto y
+conectarlo a la base de datos que se realizó previamente.
+
+PASOS REALIZADOS
+
+1.Creación del proyecto
+    -Se hace creación del servidor e inicialización del mismo
+    -Se hace creación de la estructura y arquitectura que tendrá el proyecto
+     en este caso se utilizó una arquitectura MVC (Modelo vista controlador)
+
+2.Conexión con la base de datos
+    -Se hace creación de la base de datos y se realiza la conexión con la misma
+     a través de los archivos .env y dbsettings.js
+
+3.Creación de modelos, rutas y controladores
+    -Se hace la creación de los controladores necesarios para el inicio de sesion 
+    -Se hace la creación de los controladores necesarios para la logica del carrito,
+     perfil, rutas y sesion.
+    -Se definen los métodos de los controladores
+    -Se crean las rutas necesarias
+    -Se definen las rutas en el servidor.
+
+4.Se comprueba el funcionamiento del sistema
+    -Se realizan pruebas en el navegador web.
+    -Se realizan pruebas en Postman.
+
+5.Se hace integración con Docker
+    -Se hace la creación del archivo docker en la carpeta raíz
+    -Se verifican todas las variables
+    -Se verifica tener la aplicación docker en el computador
+    -Se implementa la instalación de dependencias
+    -Se implementa la configuración de servicios de docker y se ejecuta el comando
+     docker-compose up
+
+6.Verificación de docker con Postman
+    -Se hacen pruebas del sistema funcionando con Docker en postman
+
+Configuración de OAUTH y JWT en Docker
+Para reaizar la integración y cnfiguración de OAUTH y JWT en Docker solo se
+declaró correctamente en el archivo docker-compose.yml mediante las variables de
+entorno .env, en las que se declaró previamente las credenciales necesarias para
+ambos tipos de autenticaciones

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - Stationary</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/carrito.css">
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.jpeg" alt="Stationary Logo"> 
+                    <span><h1>Stationary</h1></span>
+                </div>
+                <div class="toggle">
+                    <i class='bx bx-x'></i>
+                </div>
+            </div>
+            <%- include('rutas')%>
+        </aside>
+
+        <div class="main-content">
+            <div class="page-header">
+                <h1><i class="fas fa-shopping-cart"></i> Carrito de Compras</h1>
+                <a href="/productos" class="continue-shopping">
+                    <i class="fas fa-arrow-left"></i> Seguir comprando
+                </a>
+            </div>
+            
+            <div id="alertMessage" style="display: none;" class="alert-message"></div>
+            
+            <% if (cartItems.length === 0) { %>
+                <div class="empty-cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h2>Tu carrito está vacío</h2>
+                    <p>Agrega algunos productos para continuar con tu compra</p>
+                    <a href="/productos" class="continue-shopping">
+                        <i class="fas fa-store"></i> Ir a productos
+                    </a>
+                </div>
+            <% } else { %>
+                <div class="cart-container">
+                    <% cartItems.forEach(item => { 
+                        const sinStock = item.stock === 0;
+                        const pocoStock = item.stock > 0 && item.stock <= 5;
+                        const suficienteStock = item.stock > 5;
+                        
+                        let stockClass = '';
+                        let stockIcon = '';
+                        if (sinStock) {
+                            stockClass = 'sin-stock';
+                            stockIcon = 'fas fa-times-circle';
+                        } else if (pocoStock) {
+                            stockClass = 'poco-stock';
+                            stockIcon = 'fas fa-exclamation-circle';
+                        } else {
+                            stockClass = 'suficiente-stock';
+                            stockIcon = 'fas fa-check-circle';
+                        }
+                    %>
+                        <div class="cart-item" data-id="<%= item.id_producto %>" data-cantidad="<%= item.cantidad %>" data-stock="<%= item.stock %>">
+                            <div class="cart-item-image">
+                                <img src="<%= item.imegen_producto ? item.imegen_producto : '/img/default-product.jpg' %>" alt="<%= item.nombre %>">
+                            </div>
+                            <div class="cart-item-details">
+                                <div class="cart-item-header">
+                                    <h3 class="cart-item-name"><%= item.nombre %></h3>
+                                    <div class="cart-item-price">$<%= item.precio %></div>
+                                </div>
+                                
+                                <div class="stock-info <%= stockClass %>">
+                                    <i class="<%= stockIcon %>"></i>
+                                    <span>
+                                        <%= item.stock %> unidades
+                                        <% if (sinStock) { %>
+                                            (Sin stock)
+                                        <% } else if (pocoStock) { %>
+                                            (Poco stock)
+                                        <% } %>
+                                    </span>
+                                </div>
+                                
+                                <div class="cart-item-controls">
+                                    <div class="quantity-control">
+                                        <button class="quantity-btn btn-restar" <%= item.cantidad <= 1 ? 'disabled' : '' %>>
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="text" class="quantity-input" value="<%= item.cantidad %>" readonly>
+                                        <button class="quantity-btn btn-sumar" <%= item.cantidad >= item.stock ? 'disabled' : '' %>>
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="item-total">
+                                        Total: <strong>$<%= (item.cantidad * item.precio).toFixed(2) %></strong>
+                                    </div>
+                                </div>
+                                
+                                <div class="cart-item-actions">
+                                    <button class="delete-btn btn-eliminar">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+
+                <div class="cart-summary">
+                    <h3 class="summary-header">Resumen de compra</h3>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span>$<%= cartItems.reduce((total, item) => total + (item.cantidad * item.precio), 0).toFixed(2) %></span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Envío:</span>
+                        <span>Gratis</span>
+                    </div>
+                    
+                    <div class="summary-total">
+                        <span>Total:</span>
+                        <span>$<%= cartItems.reduce((total, item) => total + (item.cantidad * item.precio), 0).toFixed(2) %></span>
+                    </div>
+                    
+                    <div class="summary-actions">
+                        <button class="clear-cart-btn" id="vaciarCarrito">
+                            <i class="fas fa-broom"></i> Vaciar carrito
+                        </button>
+                        <button class="checkout-btn" id="finalizarCompra">
+                            <i class="fas fa-check"></i> Finalizar Compra
+                        </button>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script src="/js/carrito.js"></script>
+    <script>
+        // Toggle sidebar functionality
+        document.querySelector('.toggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('open');
+            
+            // Change icon based on state
+            const icon = this.querySelector('i');
+            if (document.querySelector('.sidebar').classList.contains('open')) {
+                icon.classList.remove('bx-x');
+                icon.classList.add('bx-menu');
+            } else {
+                icon.classList.remove('bx-menu');
+                icon.classList.add('bx-x');
+            }
+        });
+    </script>
+</body>
+</html>
