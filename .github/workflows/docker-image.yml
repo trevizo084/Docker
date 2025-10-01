@@ -29,7 +29,7 @@ jobs:
 
       # 3. Correr las pruebas
       - name: Run tests
-        run: npm test
+        run: npx jest --detectOpenHandles
         env:
           GOOGLE_CLIENT_ID: testid
           GOOGLE_CLIENT_SECRET: testsecret
