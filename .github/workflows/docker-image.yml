@@ -12,7 +12,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
+      # --- PASOS AÑADIDOS PARA CONFIGURAR Y CORRER LAS PRUEBAS ---
+      
+      # 1. Configurar Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22' 
+          
+      # 2. Instalar dependencias
+      - name: Install dependencies
+        # Este comando asume que tus dependencias de desarrollo (tests) 
+        # están en package.json.
+        run: npm install 
 
+      # 3. Correr las pruebas
+      - name: Run tests
+        # Reemplaza 'test' si tu script de prueba en package.json es diferente.
+        # Por ejemplo: run: npm run ci:test si usas un script específico para CI.
+        run: npm test 
+        # Si el comando 'npm test' falla, este paso fallará y detendrá el workflow.
+
+      # --- LOS PASOS EXISTENTES PARA DOCKER SIGUEN AQUÍ ---
+      
       - name: Extract Docker image metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -27,7 +50,7 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+        
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
