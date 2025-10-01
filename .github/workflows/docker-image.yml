@@ -29,10 +29,10 @@ jobs:
 
       # 3. Correr las pruebas
       - name: Run tests
-        # Reemplaza 'test' si tu script de prueba en package.json es diferente.
-        # Por ejemplo: run: npm run ci:test si usas un script específico para CI.
-        run: npm test 
-        # Si el comando 'npm test' falla, este paso fallará y detendrá el workflow.
+        run: npm test
+        env:
+          GOOGLE_CLIENT_ID: testid
+          GOOGLE_CLIENT_SECRET: testsecret
 
       # --- LOS PASOS EXISTENTES PARA DOCKER SIGUEN AQUÍ ---
       
