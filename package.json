@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env GOOGLE_CLIENT_ID=testid GOOGLE_CLIENT_SECRET=testsecret jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles"
   },
+
   "keywords": [],
   "author": "",
   "license": "ISC",
