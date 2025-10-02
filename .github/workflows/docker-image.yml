@@ -25,10 +25,17 @@ jobs:
 
       # Ejecutar pruebas con Jest
       - name: Run tests
-        run: ./node_modules/.bin/jest --detectOpenHandles
+        run: ./node_modules/.bin/jest --detectOpenHandles --coverage
         env:
           GOOGLE_CLIENT_ID: testid
           GOOGLE_CLIENT_SECRET: testsecret
+
+      # Calcular las metricas
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
 
       # --- Docker ---
       - name: Extract Docker image metadata
