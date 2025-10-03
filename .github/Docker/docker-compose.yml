@@ -1,0 +1,37 @@
+name: Build and Test Node.js App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test -- --coverage --detectOpenHandles
+        env:
+          GOOGLE_CLIENT_ID: testid
+          GOOGLE_CLIENT_SECRET: testsecret
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+          
+      - name: Build Docker image
+        run: docker build -t my-app .
